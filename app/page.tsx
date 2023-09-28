@@ -1,8 +1,5 @@
 'use client'
-import { userStore } from '@/store/user';
-import Image from 'next/image'
 import { useRouter, usePathname } from 'next/navigation';
-import {useEffect} from 'react'
 export default function Home() {
 
   const pathname = usePathname();

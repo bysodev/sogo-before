@@ -1,6 +1,6 @@
 'use client'
 import { useForm } from '@/hooks/useForm'
-import { userStore } from '@/store/user';
+import { zustandStore } from '@/store/user';
 import { validateOfRegister } from '@/validators/auth-validators';
 import Image from 'next/image'
 import Link from 'next/link';
@@ -8,7 +8,7 @@ import Link from 'next/link';
 export default function Home() {
 
 
-	const fetchRegisterUser  = userStore( state => state.fetchRegisterUser )
+	const fetchRegisterUser  = zustandStore( state => state.fetchRegisterUser )
 
   const { username, email, password, confirmPassword, handleChange, resetForms } = useForm( { username: '', email: '', password: '', confirmPassword: '' } )
 

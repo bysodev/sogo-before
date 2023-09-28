@@ -1,4 +1,5 @@
 import {create} from "zustand";
+import { persist, createJSONStorage } from 'zustand/middleware'
 import { typeUser } from "@/types/user";
 import { Category, category, typeLearn } from "@/types/learn";
 import Cookies from 'js-cookie'
@@ -18,8 +19,8 @@ interface State {
     fetchRegisterUser: (name: string, password: string, email: string ) => void;
     fetchVerifyUser: (token: string) => void;
 }
-
-export const userStore = create<State>()((set) => ({
+// persist(
+export const zustandStore = create<State>()( persist( (set) => ({
     user: null,
     learn: { asiertos: 0, cantidad: 0, continue: false, porcentaje: 0, categoria: Category.null  },
     token: '',
@@ -118,4 +119,11 @@ export const userStore = create<State>()((set) => ({
     fetchVerifyUser(token: string) {
         
     },
-}))
+})
+,
+    {
+        name: 'user',
+        storage: createJSONStorage(() => localStorage)
+    }
+)
+)

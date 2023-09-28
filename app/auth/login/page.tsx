@@ -1,7 +1,7 @@
 'use client'
 
 import { useForm } from '@/hooks/useForm'
-import { userStore } from '@/store/user';
+import { zustandStore } from '@/store/user';
 import Image from 'next/image';
 import Link from 'next/link';
 import Cookies from 'js-cookie'
@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 export default function LoginPage() {
 
   const router = useRouter();
-  const [fetchLoginUser, user] = userStore( state => [state.fetchLoginUser, state.user] );
+  const [fetchLoginUser, user] = zustandStore( state => [state.fetchLoginUser, state.user] );
   const {username, password, handleChange, resetForms} = useForm( {username: '', password: ''} );
 
   async function onSubmit(e: React.FormEvent<HTMLFormElement>) {
