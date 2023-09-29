@@ -1,19 +1,19 @@
 // import {jwtVerify} from 'jose'
-import Cookies from 'js-cookie'
-import { userStore } from "@/store/user";
+// import Cookies from 'js-cookie'
+// import { userStore } from "@/store/user";
 
-import {useMemo} from 'react'
-import { usePathname } from 'next/navigation';
+// import {useMemo} from 'react'
+// import { usePathname } from 'next/navigation';
 
 
-export const useAuthenticated = (): boolean =>{
+// export const useAuthenticated = (): boolean =>{
 
-    const user = userStore(state => state.user)
-    const pathname = usePathname();
+//     const user = userStore(state => state.user)
+//     const pathname = usePathname();
 
-    const isAuthenticated = useMemo(() => user !== null, [user]);
+//     const isAuthenticated = useMemo(() => user !== null, [user]);
 
-    return isAuthenticated;
+//     return isAuthenticated;
 
     // const key = new TextEncoder().encode( process.env.SECRET_KEY )
     // const jwtString = JSON.stringify(token);
@@ -34,5 +34,4 @@ export const useAuthenticated = (): boolean =>{
     //   }
     // //   console.log( new Date( dato.payload.exp * 1000 )) // formato: 2023-07-24T15:45:48.000Z
     // }
-
-}
+// }3
