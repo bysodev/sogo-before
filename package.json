@@ -25,9 +25,11 @@
     "postcss": "8.4.29",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-hook-form": "^7.46.2",
     "sweetalert2": "^11.7.27",
     "tailwindcss": "3.3.3",
     "typescript": "5.2.2",
+    "uninstall": "^0.0.0",
     "zustand": "^4.4.1"
   }
 }
