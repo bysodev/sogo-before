@@ -4,9 +4,9 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-// const URL_BACKPYTHON = "http://127.0.0.1:8000"
+const URL_BACKPYTHON = "http://127.0.0.1:8000";
 
-const URL_BACKPYTHON = "https://0plclhlq-8000.brs.devtunnels.ms";
+// const URL_BACKPYTHON = "https://0plclhlq-8000.brs.devtunnels.ms";
 
 async function getVerified(token: string) {
   try {

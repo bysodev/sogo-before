@@ -5,8 +5,8 @@ import Cookies from "js-cookie";
 import { showErrorMessage, showSuccessMessage } from "@/utilities";
 // import { sendEmail } from "@/helpers/nodemailer";
 
-const url = "https://0plclhlq-8000.brs.devtunnels.ms";
-// const url = process.env.NEXT_PUBLIC_API_BACKEND+'';
+// const url = "https://0plclhlq-8000.brs.devtunnels.ms";
+const url = process.env.NEXT_PUBLIC_API_BACKEND + "";
 const url_app = "http://localhost:3000";
 
 interface State {
