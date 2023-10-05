@@ -1,12 +1,14 @@
 "use client";
 import { useForm } from "react-hook-form";
-import { userStore } from "@/store/user";
+import { zustandStore } from "@/store/user";
+import { useStore } from "@/hooks/useStore";
+
 import Image from "next/image";
 import Link from "next/link";
 import TooltipMessage from "../../../components/TooltipMessage";
 
 export default function Home() {
-  const fetchRegisterUser = userStore((state) => state.fetchRegisterUser);
+  const fetchRegisterUser = zustandStore(state => state.fetchRegisterUser);
 
   interface UseFormInputs {
     username: string;

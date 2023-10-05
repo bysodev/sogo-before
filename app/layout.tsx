@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   icons: [{ rel: "icon", url: Favicon.src }],
 };
 
+
 export default function RootLayout({
   children,
 }: {
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ProtectedProvider>{children}</ProtectedProvider>
+        <ProtectedProvider>
+          {children}
+        </ProtectedProvider>
       </body>
     </html>
   );
