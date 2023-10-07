@@ -1,7 +1,7 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { userStore } from "@/store/user";
+import { zustandStore } from "@/store/user";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -9,7 +9,7 @@ import TooltipMessage from "../../../components/TooltipMessage";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [fetchLoginUser, user] = userStore((state) => [
+  const [fetchLoginUser, user] = zustandStore((state) => [
     state.fetchLoginUser,
     state.user,
   ]);
