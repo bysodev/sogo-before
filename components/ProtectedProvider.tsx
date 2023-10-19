@@ -1,4 +1,5 @@
 'use client'
+
 import { zustandStore } from "@/store/user";
 import { useRouter, usePathname} from "next/navigation"
 import { useEffect, Suspense, useMemo, useState } from "react";
@@ -22,7 +23,8 @@ export default function ProtectedProvider({
     useEffect(() => {
         console.log( 'Este va siendo el usuario: ' + JSON.stringify( user ) )
         console.log( 'Este va siendo el token: ' + token )
-        myAction().then( () => setPermit(true) ) // Posible solución para no usar middleware, pero sale un error, ya que server es solo experimental al parecer o problemas de renderizado
+        setPermit(true);
+        // myAction().then( () => setPermit(true) ) // Posible solución para no usar middleware, pero sale un error, ya que server es solo experimental al parecer o problemas de renderizado
         if( !permits.includes(pathname) ){
             if( user === null || (!token) ){
                 router.push('/auth/login')
@@ -36,14 +38,17 @@ export default function ProtectedProvider({
     if( !permit )
         return (<>Loading ...</>)
 
+    // if( !permit )
+    //     return (<>Loading ...</>)
+    console.log('Ya tendria que estar mostrando la pagina')
+    return (<>{children}</>);
+
     if( user !== null && !!token )
-        return ( <Suspense>{children}</Suspense>);
+        return ( <>{children}</> );
     else if( permits.includes(pathname) )  
         return ( <Suspense>{children}</Suspense>);
     else   
         return ( <Suspense><></></Suspense>);
-
-        
 
     // return ( <Suspense> { ( (user !== null) && !token )  ? children : ( (permits.includes(pathname)) ? children : <></> )} </Suspense>)
 }

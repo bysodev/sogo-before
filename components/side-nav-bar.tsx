@@ -3,9 +3,6 @@ import { Disclosure } from "@headlessui/react";
 import { usePathname } from 'next/navigation'
 import { routes } from '@/config/routes';
 
-import { CgProfile } from "react-icons/cg";
-import { FaRegComments } from "react-icons/fa";
-import { BiMessageSquareDots } from "react-icons/bi";
 import Link from "next/link";
 import { MdOutlineLogout } from "react-icons/md";
 
@@ -37,7 +34,7 @@ function SideNavbar() {
                                 className={`flex mb-2 ${ item.links.includes(pathname) ? 'bg-gray-900 shadow-lg' : ''} justify-start items-center gap-4 pl-5 hover:bg-gray-900 p-2 rounded-md group cursor-pointer hover:shadow-lg m-auto`}
                             >
                                 {
-                                    <item.icon className={`text-2xl text-gray-600 group-hover:text-white ${ item.links.includes(pathname) ? 'text-white' : ''}`} />
+                                    <item.icon color='red'  />
                                 }
                                 <h3 className={`text-base text-gray-800 group-hover:text-white font-semibold ${ item.links.includes(pathname) ? 'text-white' : ''} `}>
                                     {item.name}
