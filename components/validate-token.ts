@@ -11,9 +11,11 @@ export async function myAction() {
             const value = token.value;
             try{
                 const dato = await jwtVerify(value, key);
+                return true;
                 // return { verified: true, message: 'ok'}
             } catch(e){
                 cookies().delete('token');
+                return false;
                 // return { verified: false, message: 'no'}
             }
         }
