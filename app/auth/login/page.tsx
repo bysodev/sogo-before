@@ -35,9 +35,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="h-screen w-full">
+    <div className="h-screen w-full max-h-screen">
       <div className="grid place-items-center h-full w-full m-auto">
-        <div className="w-full md:w-1/2 xl:w-1/3 bg-white p-1 sm:p-5 rounded-lg lg:rounded-l-none">
+        <div className="w-full md:w-1/2 lg:w-auto bg-white p-1 rounded-lg lg:rounded-l-none">
           <div className="p-8 py-2">
             <Image
               priority
@@ -119,7 +119,7 @@ export default function LoginPage() {
                 <div className="text-gray-400 font-bold">O</div>
                 <div className="h-0.5 w-full bg-gray-300"></div>
               </div>
-              <div className="grid md:grid-flow-row md:grid-cols-2 gap-4">
+              <div className="grid md:grid-flow-row sm:grid-cols-2 gap-4">
                 <button
                   className="inline-flex justify-center gap-4 py-3 px-4 w-full font-semibold text-gray-950 border border-gray-600 rounded-full hover:bg-gray-50"
                   type="submit"
