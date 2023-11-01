@@ -1,13 +1,14 @@
 "use client";
-import React, { Suspense, useState } from "react";
-import NavBar from "../components/Navbar";
+import React, { useState } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
-import { Experience } from "../components/Experience";
-import { Stage } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
-import Hand from "../components/Hand";
-import bgHand from "../public/src/bgShapeHand.svg";
 import Image from "next/image";
+import Link from "next/link";
+import { Canvas } from "@react-three/fiber";
+import NavBar from "@/components/Navbar";
+import { Experience } from "@/components/Experience";
+import Hand from "@/components/Hand";
+import bgHand from "@/public/src/bgShapeHand.svg";
+import IconScroll from "@/components/icons/IconScroll";
 
 export default function Home() {
   const [currentColor, setCurrentColor] = useState(0xe7a183);
@@ -30,8 +31,8 @@ export default function Home() {
   return (
     <div className={darkMode ? "dark" : ""}>
       <div className="bg-gradient-to-br from-[#f4f6ff] via-[#dadfff] to-[#c3d3ff] dark:from-gray-900 dark:via-gray-950 dark:to-black">
-        <div className="min-h-screen min-w-min xl:max-w-fit m-auto">
-          <main className="fixed grid place-items-center space-y-32 mx-2 md:mx-4 lg:mx-20 xl:mx-32">
+        <div className="min-h-screen w-full xl:max-w-fit m-auto">
+          <main className="grid place-items-center gap-y-10 md:gap-y-20 lg:gap-y-20 xl:gap-y-0 mx-10 md:mx-14 lg:mx-20 xl:mx-32 py-5">
             <NavBar toggleDarkMode={toggleDarkMode} />
             <SectionHand
               bgHand={bgHand}
@@ -39,6 +40,11 @@ export default function Home() {
               colorButtons={colorButtons}
               updateColor={updateColor}
             />
+            <section id="features" className="w-full h-screen">
+              <h5 className="font-bold text-4xl text-center md:text-start sm:text-6xl xl:text-7xl 2xl:text-8xl text-gray-950 dark:text-white">
+                Características
+              </h5>
+            </section>
             <footer></footer>
           </main>
         </div>
@@ -49,57 +55,67 @@ export default function Home() {
 
 function SectionHand({ bgHand, currentColor, colorButtons, updateColor }: any) {
   return (
-    <section className="w-full block md:flex h-scren">
-      <div className="grid space-y-4 w-3/5">
-        <h5 className="font-bold text-6xl text-gray-950 dark:text-white">
-          Aprendizaje de Lengua de Señas
-        </h5>
-        <p className="text-xl text-gray-700 dark:text-gray-300">
-          La mejor plataforma de aprendizaje de Lengua de Señas Ecuatoriana
-        </p>
-        <div className="flex space-x-4">
-          <button className="1/2 p-2 px-7 bg-gray-900 hover:bg-gray-950 rounded-full text-white font-bold dark:bg-white dark:text-gray-900">
-            Empezar Ahora
-          </button>
-          <div className="flex gap-x-2 justify-center 1/2 font-semibold m-auto dark:text-white">
-            <AiFillPlayCircle
-              className="m-auto"
-              size={25}
-              color={"currentColor"}
+    <>
+      <section className="lg:h-screen grid place-items-center gap-20 lg:gap-0">
+        <div className="block md:flex gap-20 md:gap-10">
+          <main className="grid space-y-4 md:space-y-8 w-full md:w-3/5">
+            <h5 className="font-bold text-5xl text-center md:text-start sm:text-6xl xl:text-7xl 2xl:text-8xl text-gray-950 dark:text-white">
+              Aprendizaje de Lengua de Señas
+            </h5>
+            <p className="text-base md:text-xl text-center md:text-start 2xl:text-2xl text-gray-700 dark:text-gray-300">
+              La mejor plataforma de aprendizaje de Lengua de Señas Ecuatoriana
+              (LSE).
+            </p>
+            <p className="italic text-xs md:text-sm text-center md:text-start 2xl:text-base text-gray-700 dark:text-gray-300">
+              Aprender LSE no solo te permitirá comunicarte de manera efectiva
+              con personas sordas, sino que también te abrirá las puertas para
+              comprender su cultura y perspectivas únicas
+            </p>
+            <div className="grid md:flex gap-4 m-auto md:m-0 font-bold">
+              <Link
+                href={`/learn`}
+                className="md:1/2 p-2 px-7 bg-gray-900 hover:bg-gray-950 rounded-full text-white dark:bg-white dark:text-gray-900"
+              >
+                Empezar Ahora
+              </Link>
+              <div className="flex justify-center items-center gap-x-2 font-medium text md:1/2 dark:text-white">
+                <AiFillPlayCircle size={25} color={"currentColor"} />
+                <span>Ver Video</span>
+              </div>
+            </div>
+          </main>
+          <aside className="m-auto md:m-0 md:w-2/5 relative grid place-items-center">
+            <Image
+              src={bgHand}
+              alt="Forma del fondo para el modelo de la mano"
             />
-            Ver Video
-          </div>
+            <div className="absolute h-full w-full">
+              <Canvas
+                camera={{
+                  fov: 60,
+                  position: [0, 10, 0.8],
+                }}
+              >
+                <Experience />
+                <Hand color={currentColor} />
+              </Canvas>
+            </div>
+            <div className="absolute top-0 left-0 grid gap-2  m-auto hand-color">
+              {colorButtons.map((button: any) => (
+                <button
+                  key={button.label}
+                  className={`h-12 w-12 border-4 rounded-full type-${button.label.toLowerCase()}`}
+                  onClick={() => updateColor(button.color)}
+                  type="button"
+                ></button>
+              ))}
+            </div>
+          </aside>
         </div>
-      </div>
-      <div className="max-h-fit w-2/5 relative">
-        <Image
-          className="absolute top-0"
-          src={bgHand}
-          alt="Forma del fondo para el modelo de la mano"
-        />
-        <Canvas
-          className="absolute"
-          camera={{
-            fov: 65,
-            position: [0, 5, 2],
-          }}
-        >
-          <Stage adjustCamera={true} environment={"city"} shadows={false}>
-            <Experience />
-            <Hand color={currentColor} />
-          </Stage>
-        </Canvas>
-        <div className="absolute top-0 left-0 grid gap-2 lg:w-2/3 m-auto hand-color">
-          {colorButtons.map((button: any) => (
-            <button
-              key={button.label}
-              className={`h-12 w-12 border-4 rounded-full type-${button.label.toLowerCase()}`}
-              onClick={() => updateColor(button.color)}
-              type="button"
-            ></button>
-          ))}
-        </div>
-      </div>
-    </section>
+        <footer className="grid place-items-center text-gray-950 dark:text-white">
+          <IconScroll />
+        </footer>
+      </section>
+    </>
   );
 }

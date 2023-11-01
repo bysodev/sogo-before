@@ -1,10 +1,10 @@
-import * as THREE from 'three';
-import React, { useRef } from 'react';
-import { useGLTF } from '@react-three/drei';
-import { GLTF } from 'three-stdlib';
-import { MeshStandardMaterial, Vector3 } from 'three';
-import { useFrame, useThree } from '@react-three/fiber';
-import { Group, SkinnedMesh, Object3D } from 'three'; // Importa los tipos de Three.js
+import * as THREE from "three";
+import React, { useRef } from "react";
+import { useGLTF } from "@react-three/drei";
+import { GLTF } from "three-stdlib";
+import { MeshStandardMaterial, Vector3 } from "three";
+import { useFrame, useThree } from "@react-three/fiber";
+import { Group, SkinnedMesh, Object3D } from "three"; // Importa los tipos de Three.js
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -19,13 +19,13 @@ type GLTFResult = GLTF & {
 type ContextType = Record<
   string,
   React.ForwardRefExoticComponent<
-    JSX.IntrinsicElements['skinnedMesh'] | JSX.IntrinsicElements['bone']
+    JSX.IntrinsicElements["skinnedMesh"] | JSX.IntrinsicElements["bone"]
   >
 >;
 
 export default function Model(props: any) {
   const ref = useRef<Group>();
-  const { nodes } = useGLTF('model/hand.glb') as GLTFResult;
+  const { nodes } = useGLTF("model/hand.glb") as GLTFResult;
 
   const { camera, mouse } = useThree();
   const vec = new Vector3(1, 1, 1);
@@ -34,7 +34,7 @@ export default function Model(props: any) {
   const allMaterials = {
     hand: new MeshStandardMaterial({ color }),
     shirt: new MeshStandardMaterial({ color: 0xc7d2eb }),
-    vest: new MeshStandardMaterial({ color: 0x274479 })
+    vest: new MeshStandardMaterial({ color: 0x274479 }),
   };
 
   // useFrame(() => {
@@ -48,24 +48,24 @@ export default function Model(props: any) {
   // });
 
   return (
-    <group ref={ref} {...props}>
+    <group position={[0, -1, 0]} dispose={null} ref={ref} {...props}>
       <group name="Armature">
         <skinnedMesh
           name="Hand"
           geometry={nodes.Hand.geometry}
-          material={allMaterials['hand']}
+          material={allMaterials["hand"]}
           skeleton={nodes.Hand.skeleton}
         />
         <skinnedMesh
           name="Shirt"
           geometry={nodes.Shirt.geometry}
-          material={allMaterials['shirt']}
+          material={allMaterials["shirt"]}
           skeleton={nodes.Shirt.skeleton}
         />
         <skinnedMesh
           name="Vest"
           geometry={nodes.Vest.geometry}
-          material={allMaterials['vest']}
+          material={allMaterials["vest"]}
           skeleton={nodes.Vest.skeleton}
         />
         <primitive object={nodes.Bone} />
@@ -74,4 +74,4 @@ export default function Model(props: any) {
   );
 }
 
-useGLTF.preload('/hand.glb');
+useGLTF.preload("/hand.glb");

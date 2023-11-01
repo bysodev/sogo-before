@@ -30,7 +30,7 @@ export default function LoginPage() {
     const response = await fetchLoginUser(data.username, data.password);
     if (response) {
       reset();
-      router.push("/");
+      router.push("/learn");
     }
   }
 

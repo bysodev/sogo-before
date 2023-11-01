@@ -10,7 +10,7 @@ export const useStore = <T, F>(
 //   console.log(`Este es el resultado al comienzo: ${ JSON.stringify( result )}`)
 //   console.log(`Esta es la data: ${JSON.stringify( data )}`)
   useEffect(() => {
-    // console.log(`Este es el resultado despues: ${result}`)
+    console.log(`Este es el resultado despues: ${ JSON.stringify( result )}`)
     setData(result);
   }, [result]);
 

@@ -7,3 +7,18 @@
     @apply text-sm text-gray-600 border rounded-md p-3 border-gray-400;
   }
 } */
+
+.hand-color button.type-white {
+  background-color: rgb(227, 179, 158);
+  border-color: rgb(173, 109, 81);
+}
+
+.hand-color button.type-brown {
+  background-color: rgb(98, 65, 34);
+  border-color: rgb(54, 32, 12);
+}
+
+.hand-color button.type-yellow {
+  background-color: rgb(255, 227, 46);
+  border-color: rgb(198, 174, 14);
+}
