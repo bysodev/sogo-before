@@ -3,12 +3,13 @@ import { Enunciados } from "@/components/cards/Enunciados";
 import { GeneralCard } from "@/components/cards/GeneralCard";
 import Camara from "@/components/camara/Camara";
 import Image from "next/image";
-import A from "@/public/letra_A.jpg";
 import { FooterLesson } from "@/components/progress/FooterLesson";
 import { ModalLesson } from "@/components/progress/ModalLesson";
 import { useEffect, useRef, useState } from "react";
 import { Progressbar } from "@/components/progress/Progressbar";
 import Cookies from "js-cookie";
+import defaultImage from "@/public/lesson/vocals/letra_A.jpg";
+import { SignImageData } from "@/components/DiccionaryLesson";
 
 const vocales = ["A", "E", "I", "O", "U"];
 
@@ -72,6 +73,23 @@ export default function LessonVocales() {
     continue: false,
     vocal: vocales[0],
   });
+
+  // Almacena la imagen actual en el estado del componente
+  const [currentImage, setCurrentImage] = useState(defaultImage);
+
+  // Función para cambiar la imagen actual basada en el progreso
+  const updateImage = () => {
+    const letter = progres.vocal;
+    const imagen = SignImageData.find((imagen) => imagen.name === letter);
+    if (imagen) {
+      setCurrentImage(imagen.url);
+    }
+  };
+
+  useEffect(() => {
+    updateImage();
+  }, [progres.vocal]); // Actualiza la imagen cuando progres.vocal cambia
+
   const [time, settime] = useState(timeLocal);
 
   useEffect(() => {
@@ -101,12 +119,12 @@ export default function LessonVocales() {
         verification(imagen, progres.vocal).then(async (response) => {
           if (!response.ok) {
             // Si la respuesta no es exitosa, lanza una excepción
-            console.log(await response.json());
+            // console.log(await response.json());
             return;
           }
           // La respuesta fue exitosa, maneja los datos de la respuesta
-          const data = await response.json();
-          console.log({ "Datos exitosos:": data });
+          // const data = await response.json();
+          // console.log({ "Datos exitosos:": data });
           setprogress((pro) => ({
             ...pro,
             asiertos: pro.asiertos + 1,
@@ -114,6 +132,7 @@ export default function LessonVocales() {
             vocal: vocales[pro.asiertos + 1],
             continue: true,
           }));
+          console.log(progres.vocal);
         });
       }
     }
@@ -149,10 +168,14 @@ export default function LessonVocales() {
           CLICK
         </button>
         <div className="flex w-4/5 justify-between">
-          <div className="w-2/5 m-2">
-            <div className="flex flex-col justify-center rounded-xl shadow-md">
-              <Image src={A} alt="Letra A" />
-            </div>
+          <div className="w-2/5 mx-auto">
+            <Image
+              className="rounded-xl shadow-md"
+              src={currentImage}
+              height={300}
+              width={300}
+              alt="Letra A"
+            />
           </div>
           <div className="w-2/5">
             <Camara

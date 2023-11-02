@@ -9,7 +9,7 @@ export default function RootLayout({
 }) {
   return (
     <div className="flex w-full">
-      {/* <SideNavbar /> */}
+      <SideNavbar />
       {children}
     </div>
   );

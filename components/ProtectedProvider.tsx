@@ -13,13 +13,7 @@ export default function ProtectedProvider({
   children: React.ReactNode;
 }) {
   let permits = useMemo(
-    () => [
-      "/auth/login",
-      "/auth/register",
-      "/auth/verify",
-      "",
-      "/lesson/vocales",
-    ],
+    () => ["/auth/login", "/auth/register", "/auth/verify", "/"],
     []
   );
   const user = useStore(zustandStore, (state) => state.user);
