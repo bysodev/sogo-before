@@ -1,14 +1,16 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { zustandStore } from "@/store/user";
+import { zustandStore } from "@/utilities/store/user";
 import Image from "next/image";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TooltipMessage from "../../../components/TooltipMessage";
+import IconLogo from "@/components/icons/IconLogo";
+import Link from "next/link";
+import { signIn } from "next-auth/react";
 
 export default function LoginPage() {
-  const router = useRouter();
+  const { push } = useRouter();
   const [fetchLoginUser, user] = zustandStore((state) => [
     state.fetchLoginUser,
     state.user,
@@ -24,33 +26,38 @@ export default function LoginPage() {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<UseFormInputs>();
+  } = useForm<UseFormInputs>({ mode: "onChange" });
 
-  async function onSubmit(data: UseFormInputs) {
-    const response = await fetchLoginUser(data.username, data.password);
-    if (response) {
+  const onSubmit = async (data: UseFormInputs) => {
+    const response = await signIn("credentials", {
+      username: data.username,
+      password: data.password,
+      redirect: false,
+    });
+    console.log(response);
+    if (response?.status === 200) {
       reset();
-      router.push("/learn");
+      push("/learn");
     }
-  }
+  };
 
   return (
     <div className="h-screen w-full max-h-screen">
       <div className="grid place-items-center h-full w-full m-auto">
-        <div className="w-full md:w-1/2 lg:w-auto bg-white p-1 rounded-lg lg:rounded-l-none">
-          <div className="p-8 py-2">
-            <Image
-              priority
-              className="mx-auto mb-6"
-              height={80}
-              width={80}
-              src="./../src/logo-min.svg"
-              alt="Logo reducido de SoGo Sign"
-            />
+        <div className="w-full sm:w-2/3 md:w-1/2 lg:w-auto xl:w-1/3 2xl:w-auto bg-white p-1 rounded-lg lg:rounded-l-none">
+          <div className="p-2 sm:p-8 sm:py-2 xl:px-6">
+            <Link href={"/"}>
+              <IconLogo height={80} width={80} className="mx-auto mb-6" />
+            </Link>
             <p className="mb-8 whitespace-normal text-3xl text-center font-bold text-gray-950">
               Bienvenido
             </p>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(onSubmit)(e);
+              }}
+            >
               <div className="grid gap-4">
                 <div
                   className={`flex flex-wrap text-sm border rounded-3xl p-3 ps-6 ${
@@ -60,11 +67,16 @@ export default function LoginPage() {
                   } container-fluid`}
                 >
                   <input
-                    className="w-11/12 focus:outline-none"
+                    autoComplete="username"
+                    className="flex-1 focus:outline-none"
                     type="text"
-                    placeholder="Usuario o correo"
+                    placeholder="Nombre de usuario"
                     {...register("username", {
                       required: { value: true, message: "Usuario requerido" },
+                      minLength: {
+                        value: 4,
+                        message: "Requiere al menos 4 caracteres",
+                      },
                     })}
                   />
                   {errors.username && (
@@ -80,7 +92,8 @@ export default function LoginPage() {
                   } container-fluid`}
                 >
                   <input
-                    className="w-11/12 focus:outline-none"
+                    autoComplete="password"
+                    className="flex-1 focus:outline-none"
                     type="password"
                     placeholder="Contraseña"
                     {...register("password", {
@@ -89,8 +102,8 @@ export default function LoginPage() {
                         message: "Contraseña requerida",
                       },
                       minLength: {
-                        value: 5,
-                        message: "Requiere al menos 5 caracteres",
+                        value: 6,
+                        message: "Requiere al menos 6 caracteres",
                       },
                     })}
                   />
@@ -111,6 +124,7 @@ export default function LoginPage() {
               <button
                 className="mt-2 py-3 px-4 w-full font-bold text-white bg-gray-900 rounded-full hover:bg-gray-950 "
                 type="submit"
+                id="submit-login"
               >
                 Iniciar Sesión
               </button>
@@ -119,34 +133,35 @@ export default function LoginPage() {
                 <div className="text-gray-400 font-bold">O</div>
                 <div className="h-0.5 w-full bg-gray-300"></div>
               </div>
-              <div className="grid md:grid-flow-row sm:grid-cols-2 gap-4">
+              <div className="grid md:grid-flow-row sm:grid-cols-2 gap-4 text-sm">
                 <button
-                  className="inline-flex justify-center gap-4 py-3 px-4 w-full font-semibold text-gray-950 border border-gray-600 rounded-full hover:bg-gray-50"
-                  type="submit"
+                  onClick={() => signIn("google")}
+                  className="items-center inline-flex justify-center gap-2 2xl:gap-4 py-3 px-4 w-full font-semibold text-gray-950 border border-gray-600 rounded-full hover:bg-gray-50"
+                  type="button"
                 >
                   <Image
                     loading="lazy"
-                    className="my-auto"
                     height={25}
                     width={25}
                     src="./../src/google-icon.svg"
                     alt="Logo de Google"
                   />
-                  Google
+                  <span>Google</span>
                 </button>
                 <button
-                  className="inline-flex justify-center gap-4 py-3 px-4 w-full font-semibold text-gray-950 border border-gray-600 rounded-full hover:bg-gray-50"
-                  type="submit"
+                  onClick={() => signIn("github")}
+                  className="items-center inline-flex justify-center gap-2 2xl:gap-4 py-3 px-4 w-full font-semibold text-gray-950 border border-gray-600 rounded-full hover:bg-gray-50"
+                  type="button"
                 >
                   <Image
                     loading="lazy"
-                    className="my-auto"
                     height={25}
                     width={25}
-                    src="./../src/facebook-icon.svg"
-                    alt="Logo de Facebook"
+                    src="./../src/github-icon.svg"
+                    alt="Logo de GitHub"
                   />
-                  Facebook
+                  GitHub
+                  <span></span>
                 </button>
               </div>
               <div className="text-center mt-8 text-sm font-semibold text-gray-400 align-baseline">

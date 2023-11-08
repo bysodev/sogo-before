@@ -1,11 +1,6 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import SideNavbar from "@/components/side-nav-bar";
-// const SideNavbar = dynamic(() => import('@/components/side-nav-bar'), {
-//   loading: () => <>SideNavBar</>
-// })
-
 export default function RootLayout({
   children,
 }: {
@@ -13,7 +8,7 @@ export default function RootLayout({
 }) {
   return (
     <div className="flex w-full">
-      <SideNavbar />
+      {/* <SideNavbar /> */}
       {children}
     </div>
   );

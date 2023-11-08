@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
-import { typeUser } from "@/types/user";
-import { Category, category, typeLearn } from "@/types/learn";
-import Cookies from "js-cookie";
-import { showErrorMessage, showSuccessMessage } from "@/utilities";
+import { typeUser } from "@/utilities/types/user";
+import { Category, category, typeLearn } from "@/utilities/types/learn";
+// import Cookies from "js-cookie";
+import { showErrorMessage, showSuccessMessage } from "@/utilities/sweet-alert";
 // import { sendEmail } from "@/helpers/nodemailer";
 
 const url = process.env.NEXT_PUBLIC_API_BACKEND + "";
@@ -15,7 +15,11 @@ interface State {
   token: string;
   validate: string;
   fetchLoginUser: (username: string, password: string) => Promise<boolean>;
-  fetchRegisterUser: (name: string, password: string, email: string) => void;
+  fetchRegisterUser: (
+    name: string,
+    password: string,
+    email: string
+  ) => Promise<boolean>;
   fetchVerifyUser: (token: string) => void;
 }
 // persist(
@@ -43,7 +47,7 @@ export const zustandStore = create<State>()(
         urlencoded.append("password", password);
 
         try {
-          const response = await fetch(`${url}/user/token`, {
+          const response = await fetch(`${url}/user/login`, {
             method: "POST",
             body: urlencoded,
             headers: myHeader,
@@ -52,23 +56,15 @@ export const zustandStore = create<State>()(
             redirect: "follow",
           });
           if (response.status === 200) {
-            const { access_token, respuesta, username, email } =
+            const { access_token, message, username, email } =
               await response.json();
-            console.log({ access_token, respuesta });
-            Cookies.set("token", access_token);
+            showSuccessMessage(message);
+            // Cookies.set("token", access_token);
             set(() => ({ user: { username, email, token: access_token } }));
-            showSuccessMessage(respuesta.respuesta);
             return true;
           } else {
-            if (response.status === 401) {
-              const respu = await response.json();
-              showErrorMessage(respu.detail);
-            }
-
-            if (response.status === 500)
-              showErrorMessage("Error en el servidor");
-
-            console.log(response.status);
+            const respu = await response.json();
+            showErrorMessage(respu.detail);
             return false;
           }
         } catch (error) {
@@ -76,28 +72,18 @@ export const zustandStore = create<State>()(
           console.error(error);
           return false;
         }
-        // console.log(process.env.API_BACKEND)
-        // const res = await fetch('http://localhost:3000/api/user/login');
       },
       fetchRegisterUser: async (
         username: string,
         password: string,
         email: string
-      ) => {
+      ): Promise<boolean> => {
         var myHeader = new Headers();
         myHeader.append("Accept", "application/json");
         myHeader.append("Content-Type", "application/json");
 
-        console.log(
-          JSON.stringify({
-            username: username,
-            password: password,
-            email: email,
-          })
-        );
-
         try {
-          const response = await fetch(`${url}/user/`, {
+          const response = await fetch(`${url}/user/register`, {
             method: "POST",
             body: JSON.stringify({
               username: username,
@@ -123,27 +109,22 @@ export const zustandStore = create<State>()(
                 redirect: "follow",
               });
               if (response.ok) {
-                showSuccessMessage(
-                  "El correo de verificación fue revisado exitosamente"
-                );
+                showSuccessMessage("Revise su correo para confirmar su cuenta");
+                return true; // Indicar que la operación fue exitosa
               }
             } catch (e) {
               showErrorMessage(
-                "El correo de verificación no pudo ser enviado!! Comuniquese con la administración"
+                "El correo de verificación no pudo ser enviado. Intente de nuevo más tarde"
               );
             }
-          }
-          if (response.status === 422) {
-            showErrorMessage("Fallo al no enviar los datos conpletos");
+          } else {
+            const respu = await response.json();
+            showErrorMessage(respu.detail);
           }
         } catch (error) {
-          console.error(error);
-          showErrorMessage(
-            "Fallo al registrarse, comuniquese con la administración"
-          );
+          showErrorMessage("Error en el servidor. Intente de nuevo más tarde");
         }
-        // console.log(process.env.API_BACKEND)
-        // const res = await fetch('http://localhost:3000/api/user/login');
+        return false; // Indicar que la operación falló
       },
       fetchVerifyUser(token: string) {},
     }),

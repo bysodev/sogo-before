@@ -1,32 +1,41 @@
-import React from "react";
-import { Tooltip } from "@nextui-org/react";
+import React, { useRef, useState } from "react";
+import { RiErrorWarningLine } from "react-icons/ri";
+
+const Tooltip = ({ text, children }: { text: any; children: any }) => {
+  const [isTooltipVisible, setTooltipVisible] = useState(false);
+  const tooltipRef = useRef(null);
+
+  const handleMouseEnter = () => {
+    setTooltipVisible(true);
+  };
+
+  const handleMouseLeave = () => {
+    setTooltipVisible(false);
+  };
+
+  return (
+    <div
+      className="text-red-500 relative grid place-items-center"
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+    >
+      {children}
+      {isTooltipVisible && (
+        <div
+          ref={tooltipRef}
+          className="-mt-16 right-0 sm:right-auto absolute px-4 py-2 border border-blue-gray-50 bg-white z-10 hadow-sm shadow-black/10 rounded-full"
+        >
+          <p className="font-semibold text-sm whitespace-nowrap">{text}</p>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default function TooltipMessage({ message }: { message: string }) {
   return (
-    <Tooltip
-      closeDelay={0}
-      placement="bottom"
-      className="border border-blue-gray-50 bg-white shadow-sm shadow-black/10 rounded-full text-red-500"
-      content={
-        <div className="w-auto px-4 py-2">
-          <p className="font-semibold opacity-80 text-sm">{message}</p>
-        </div>
-      }
-    >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 24 24"
-        stroke="currentColor"
-        strokeWidth={2}
-        className="h-5 w-5 cursor-pointer"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M11.25 11.25l.041-.02a.75.75 0 011.063.852l-.708 2.836a.75.75 0 001.063.853l.041-.021M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9-3.75h.008v.008H12V8.25z"
-        />
-      </svg>
+    <Tooltip text={message}>
+      <RiErrorWarningLine size={20} />
     </Tooltip>
   );
 }

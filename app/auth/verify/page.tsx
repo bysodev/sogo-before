@@ -1,12 +1,11 @@
 "use client";
-import { showErrorMessage, showSuccessMessage } from "@/utilities";
+import { showErrorMessage, showSuccessMessage } from "@/utilities/sweet-alert";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { getSession } from "next-auth/react";
 
-const URL_BACKPYTHON = "http://127.0.0.1:8000";
-
-// const URL_BACKPYTHON = "https://0plclhlq-8000.brs.devtunnels.ms";
+const URL_BACKPYTHON = process.env.NEXT_PUBLIC_API_BACKEND;
 
 async function getVerified(token: string) {
   try {
@@ -24,12 +23,13 @@ async function getVerified(token: string) {
   }
 }
 
-export default function Verify() {
+export default async function Verify() {
+  const user = await getSession();
+
   const params = useSearchParams();
   const [verified, setVerified] = useState(false);
-  const token = params.get("token");
 
-  getVerified(token + "").then((response) => {
+  getVerified(user?.user?.accessToken + "").then((response) => {
     if (response?.ok) {
       setVerified(true);
       showSuccessMessage(response?.message);

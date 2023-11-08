@@ -1,14 +1,16 @@
 "use client";
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { AiFillPlayCircle } from "react-icons/ai";
 import Image from "next/image";
 import Link from "next/link";
 import { Canvas } from "@react-three/fiber";
 import NavBar from "@/components/Navbar";
 import { Experience } from "@/components/Experience";
-import Hand from "@/components/Hand";
 import bgHand from "@/public/src/bgShapeHand.svg";
 import IconScroll from "@/components/icons/IconScroll";
+import dynamic from "next/dynamic";
+
+const Hand = dynamic(() => import("@/components/Hand"), { ssr: false });
 
 export default function Home() {
   const [currentColor, setCurrentColor] = useState(0xe7a183);
@@ -27,6 +29,10 @@ export default function Home() {
   const toggleDarkMode = () => {
     setDarkMode(!darkMode);
   };
+
+  const memoizedDarkMode = useMemo(() => darkMode, [darkMode]);
+
+  console.log({ darkMode, memoizedDarkMode });
 
   return (
     <div className={darkMode ? "dark" : ""}>

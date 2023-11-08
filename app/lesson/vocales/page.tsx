@@ -7,18 +7,18 @@ import { FooterLesson } from "@/components/progress/FooterLesson";
 import { ModalLesson } from "@/components/progress/ModalLesson";
 import { useEffect, useRef, useState } from "react";
 import { Progressbar } from "@/components/progress/Progressbar";
-import Cookies from "js-cookie";
 import defaultImage from "@/public/lesson/vocals/letra_A.jpg";
 import { SignImageData } from "@/components/DiccionaryLesson";
+import { getSession } from "next-auth/react";
+import { DefaultSession } from "next-auth";
 
 const vocales = ["A", "E", "I", "O", "U"];
 
 async function verification(img64: string, vocal: string) {
-  const jwt = Cookies.get("token");
-
+  const user = await getSession();
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", `Bearer ${jwt}`);
+  myHeaders.append("Authorization", `Bearer ${user?.user?.accessToken}`);
 
   var raw = JSON.stringify({
     learn: "numeros",
@@ -44,11 +44,11 @@ async function verification(img64: string, vocal: string) {
 }
 
 const getLesson = async () => {
-  const jwt = Cookies.get("token");
+  const user = await getSession();
 
   var myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
-  myHeaders.append("Authorization", `Bearer ${jwt}`);
+  myHeaders.append("Authorization", `Bearer ${user?.user?.accessToken}`);
 
   const res = await fetch(`http://127.0.0.1:8000/user/lesson/vocales`, {
     method: "GET",
@@ -77,16 +77,14 @@ export default function LessonVocales() {
   // Almacena la imagen actual en el estado del componente
   const [currentImage, setCurrentImage] = useState(defaultImage);
 
-  // Función para cambiar la imagen actual basada en el progreso
-  const updateImage = () => {
-    const letter = progres.vocal;
-    const imagen = SignImageData.find((imagen) => imagen.name === letter);
-    if (imagen) {
-      setCurrentImage(imagen.url);
-    }
-  };
-
   useEffect(() => {
+    const updateImage = () => {
+      const letter = progres.vocal;
+      const imagen = SignImageData.find((imagen) => imagen.name === letter);
+      if (imagen) {
+        setCurrentImage(imagen.url);
+      }
+    };
     updateImage();
   }, [progres.vocal]); // Actualiza la imagen cuando progres.vocal cambia
 
@@ -123,16 +121,16 @@ export default function LessonVocales() {
             return;
           }
           // La respuesta fue exitosa, maneja los datos de la respuesta
-          // const data = await response.json();
-          // console.log({ "Datos exitosos:": data });
-          setprogress((pro) => ({
-            ...pro,
-            asiertos: pro.asiertos + 1,
-            porcentaje: ((pro.asiertos + 1) / pro.preguntas) * 100,
-            vocal: vocales[pro.asiertos + 1],
-            continue: true,
-          }));
-          console.log(progres.vocal);
+          const data = await (response as Response).json();
+          console.log(data);
+          if (data.result === progres.vocal)
+            setprogress((pro) => ({
+              ...pro,
+              asiertos: pro.asiertos + 1,
+              porcentaje: ((pro.asiertos + 1) / pro.preguntas) * 100,
+              vocal: vocales[pro.asiertos + 1],
+              continue: true,
+            }));
         });
       }
     }

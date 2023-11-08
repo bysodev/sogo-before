@@ -2,9 +2,8 @@ import * as THREE from "three";
 import React, { useRef } from "react";
 import { useGLTF } from "@react-three/drei";
 import { GLTF } from "three-stdlib";
-import { MeshStandardMaterial, Vector3 } from "three";
+import { MeshStandardMaterial, Vector3, Group } from "three";
 import { useFrame, useThree } from "@react-three/fiber";
-import { Group, SkinnedMesh, Object3D } from "three"; // Importa los tipos de Three.js
 
 type GLTFResult = GLTF & {
   nodes: {
@@ -15,13 +14,6 @@ type GLTFResult = GLTF & {
   };
   materials: {};
 };
-
-type ContextType = Record<
-  string,
-  React.ForwardRefExoticComponent<
-    JSX.IntrinsicElements["skinnedMesh"] | JSX.IntrinsicElements["bone"]
-  >
->;
 
 export default function Model(props: any) {
   const ref = useRef<Group>();
