@@ -36,12 +36,18 @@
     "postcss": "^8.4.31",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+<<<<<<< HEAD
     "react-hook-form": "^7.46.2",
     "react-icons": "^4.11.0",
     "react-webcam": "^7.1.1",
     "sharp": "^0.32.6",
     "svgo": "^3.0.2",
     "sweetalert2": "^11.0.11",
+=======
+    "react-icons": "^4.11.0",
+    "react-webcam": "^7.1.1",
+    "sweetalert2": "^11.7.27",
+>>>>>>> 9c43535953254a51eeaad3b47c2a3c063605bacd
     "tailwindcss": "3.3.3",
     "three": "^0.157.0",
     "typescript": "5.2.2",
