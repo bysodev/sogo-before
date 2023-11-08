@@ -1,146 +1,191 @@
-'use client'
-import { useForm } from '@/hooks/useForm'
-import { zustandStore } from '@/store/user';
-import { validateOfRegister } from '@/validators/auth-validators';
-import Image from 'next/image'
-import Link from 'next/link';
+"use client";
+import { useForm } from "react-hook-form";
+import { zustandStore } from "@/utilities/store/user";
+import Link from "next/link";
+import TooltipMessage from "@/components/TooltipMessage";
+import IconLogo from "@/components/icons/IconLogo";
+import { rgxEmail } from "@/utilities/validators/auth-validators";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
+  const fetchRegisterUser = zustandStore((state) => state.fetchRegisterUser);
 
+  interface UseFormInputs {
+    username: string;
+    email: string;
+    password: string;
+    repass: string;
+  }
 
-	const fetchRegisterUser  = zustandStore( state => state.fetchRegisterUser )
+  const {
+    register,
+    handleSubmit,
+    reset,
+    watch,
+    formState: { errors },
+  } = useForm<UseFormInputs>({ mode: "onChange" });
 
-  const { username, email, password, confirmPassword, handleChange, resetForms } = useForm( { username: '', email: '', password: '', confirmPassword: '' } )
+  const { push } = useRouter();
 
-  function onSubmit(e: React.FormEvent<HTMLFormElement>) { 
-    e.preventDefault(); 
-	let confirm = validateOfRegister( {username, email, password, confirmPassword} ) 
-	if( confirm ){
-		console.log(username, email, password, confirmPassword);  
-		fetchRegisterUser( username, password, email ) 
-	} 
-  } 
-
+  async function onSubmit(data: UseFormInputs) {
+    const response = await fetchRegisterUser(
+      data.username,
+      data.password,
+      data.email
+    );
+    if (response) {
+      // Si las contraseñas coinciden, continuar con el reset y redirección
+      reset();
+      push("/auth/login");
+    }
+  }
 
   return (
-    <div className='container h-screen mx-auto'>
-			<div className='flex h-full items-center justify-center px-6'>
-				<div className='w-full xl:w-3/4 lg:w-11/12 flex shadow'>
-					<div
-						className='w-full h-auto bg-gray-400 hidden lg:block lg:w-5/12 bg-cover rounded-l-lg'
-						style={{
-							backgroundImage: `url('https://vidcache.net:8161/static/b5a0760b31fddf19325cc67eb4bbf19ce8271a18/login-register.jpg')`,
-							backgroundPosition: 'center',
-							backgroundSize: 'cover',
-							backgroundRepeat: 'no-repeat',
-						}}
-					></div>
-					<div className='w-full lg:w-7/12 bg-white p-5 rounded-lg lg:rounded-l-none'>
-						<h3 className='pt-4 text-step-2 font-bold text-center capitalize'>
-							Crea una cuenta!
-						</h3>
-						<form className='px-8 pt-6 pb-8 mb-4 bg-white rounded' onSubmit={onSubmit}>
-							<div>
-								<div className='mb-4 md:mr-2 md:mb-0'>
-									<label
-										className='block mb-2 text-sm font-bold text-gray-700'
-										htmlFor='username'
-									>
-										Nombre de usuario
-									</label>
-									<input
-										className='w-full px-3 py-2 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
-										id='username'
-										type='text'
-										placeholder='Juandeveloper'
-										name='username'
-										value={username}
-										required
-										minLength={3}
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='mb-2'>
-								<label
-									className='block mb-2 text-sm font-bold text-gray-700'
-									htmlFor='email'
-								>
-									Correo electrónico
-								</label>
-								<input
-									className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
-									id='email'
-									type='email'
-									placeholder='juandev@gmail.com'
-									name='email'
-									value={email}
-									required
-									onChange={handleChange}
-								/>
-							</div>
-							<div className='md:flex md:justify-between'>
-								<div className='mb-4 md:mr-2 md:mb-0'>
-									<label
-										className='block mb-2 text-sm font-bold text-gray-700'
-										htmlFor='password'
-									>
-										Constraseña
-									</label>
-									<input
-										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border border-red-500 rounded shadow-sm appearance-none focus:shadow-outline'
-										id='password'
-										type='password'
-										placeholder='******************'
-										name='password'
-										value={password}
-										required
-										minLength={6}
-										onChange={handleChange}
-									/>
-								</div>
-								<div className='md:ml-2'>
-									<label
-										className='block mb-2 text-sm font-bold text-gray-700'
-										htmlFor='confirmPassword'
-									>
-										Confirmar contraseña
-									</label>
-									<input
-										className='w-full px-3 py-2 mb-3 text-sm leading-tight text-gray-700 border rounded shadow-sm appearance-none focus:shadow-outline'
-										id='confirmPassword'
-										type='password'
-										placeholder='******************'
-										name='confirmPassword'
-										value={confirmPassword}
-										required
-										minLength={6}
-										onChange={handleChange}
-									/>
-								</div>
-							</div>
-							<div className='mb-6 text-center'>
-								<button
-									className='w-full px-4 py-2 font-bold text-white bg-blue-500 rounded-full hover:bg-blue-700 focus:shadow-outline'
-									type='submit'
-								>
-									Registrar cuenta
-								</button>
-							</div>
-							<hr className='mb-6 border-t' />
-							
-							<div className='text-center'>
-								<Link
-									href='/auth/login'
-									className='inline-block text-sm text-blue-500 align-baseline hover:text-blue-800'
-								>
-									¿Ya tienes una cuenta? Inicia sesión!
-								</Link>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-  )
+    <div className="h-screen w-full max-h-screen">
+      <div className="grid place-items-center h-full w-full m-auto">
+        <div className="w-full sm:w-2/3 md:w-1/2 lg:w-[30%] xl:w-1/3 2xl:w-auto bg-white p-1 rounded-lg lg:rounded-l-none">
+          <div className="p-2 sm:p-8 sm:py-2 xl:px-6">
+            <Link title="Ir a la página de inicio" href={"/"}>
+              <IconLogo height={80} width={80} className="mx-auto mb-6" />
+            </Link>
+            <p className="mb-8 whitespace-normal text-3xl text-center font-bold text-gray-950">
+              Crea una cuenta
+            </p>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSubmit(onSubmit)(e);
+              }}
+            >
+              <div className="grid gap-4">
+                <div
+                  className={`flex flex-wrap text-sm border rounded-3xl p-3 ps-6 ${errors.username
+                      ? "text-red-600 border-red-400"
+                      : "text-gray-600 border-gray-400"
+                    } container-fluid`}
+                >
+                  <input
+                    autoComplete="username"
+                    className="flex-1 focus:outline-none"
+                    type="text"
+                    placeholder="Nombre de usuario"
+                    {...register("username", {
+                      required: { value: true, message: "Usuario requerido" },
+                      minLength: {
+                        value: 4,
+                        message: "Requiere al menos 4 caracteres",
+                      },
+                    })}
+                  />
+                  {errors.username && (
+                    <TooltipMessage message={errors.username.message!} />
+                  )}
+                </div>
+
+                <div
+                  className={`flex flex-wrap text-sm border rounded-3xl p-3 ps-6 ${errors.email
+                      ? "text-red-600 border-red-400"
+                      : "text-gray-600 border-gray-400"
+                    } container-fluid`}
+                >
+                  <input
+                    autoComplete="email"
+                    className="flex-1 focus:outline-none"
+                    type="text"
+                    placeholder="Correo electrónico"
+                    {...register("email", {
+                      required: { value: true, message: "Correo requerido" },
+                      pattern: {
+                        value: rgxEmail,
+                        message: "Correo electrónico no válido",
+                      },
+                    })}
+                  />
+                  {errors.email && (
+                    <TooltipMessage message={errors.email.message!} />
+                  )}
+                </div>
+
+                <section className="grid gap-4 2xl:grid-cols-2">
+                  <div
+                    className={`flex flex-wrap text-sm border rounded-3xl p-3 ps-6 ${errors.password
+                        ? "text-red-600 border-red-400"
+                        : "text-gray-600 border-gray-400"
+                      } container-fluid`}
+                  >
+                    <input
+                      className="flex-1 focus:outline-none"
+                      type="password"
+                      placeholder="Contraseña"
+                      {...register("password", {
+                        required: {
+                          value: true,
+                          message: "Contraseña requerido",
+                        },
+                        minLength: {
+                          value: 6,
+                          message: "Requiere al menos 6 caracteres",
+                        },
+                      })}
+                    />
+                    {errors.password && (
+                      <TooltipMessage message={errors.password.message!} />
+                    )}
+                  </div>
+                  <div
+                    className={`relative flex flex-wrap text-sm border rounded-3xl p-3 ps-6 ${errors.repass
+                        ? "text-red-600 border-red-400"
+                        : "text-gray-600 border-gray-400"
+                      } container-fluid`}
+                  >
+                    <input
+                      className="flex-1 focus:outline-none"
+                      type="password"
+                      placeholder="Confirmar contraseña"
+                      {...register("repass", {
+                        required: {
+                          value: true,
+                          message: "Confirmación requerida",
+                        },
+                        minLength: {
+                          value: 6,
+                          message: "Requiere al menos 6 caracteres",
+                        },
+                        validate: (value: string) => {
+                          if (value !== watch("password"))
+                            return "Las contraseñas no coinciden";
+                        },
+                      })}
+                    />
+                    {errors.repass && (
+                      <TooltipMessage message={errors.repass.message!} />
+                    )}
+                  </div>
+                </section>
+              </div>
+              <button
+                className="mt-4 py-3 px-4 w-full font-bold text-white bg-gray-900 rounded-full hover:bg-gray-950 "
+                type="submit"
+              >
+                Registrar cuenta
+              </button>
+              <div className="flex flex-row items-center gap-4 my-8">
+                <div className="h-0.5 w-full bg-gray-300"></div>
+              </div>
+              <div className="text-center mt-4 text-sm font-semibold text-gray-400 align-baseline">
+                <p>¿Ya tienes una cuenta?</p>
+                <Link
+                  title="Ir a la página para iniciar sesión"
+                  href={"/auth/login"}
+                  className="font-bold text-gray-500 hover:text-gray-700"
+                >
+                  Inicia sesión
+                </Link>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }

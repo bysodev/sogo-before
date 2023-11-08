@@ -1,4 +1,9 @@
+import IconLogo from "@/components/icons/IconLogo";
+
 export default function Loading() {
-    // Or a custom loading skeleton component
-    return <p>Loading en la APPP</p>
-  }
+  return (
+    <div className="w-full h-screen grid place-items-center">
+      <IconLogo height={40} widht={40} />
+    </div>
+  );
+}

@@ -1,3 +1,4 @@
+'use client'
 import { useState, useEffect } from 'react';
 
 export const useStore = <T, F>(
@@ -5,10 +6,11 @@ export const useStore = <T, F>(
   callback: (state: T) => F
 ) => {
   const result = store(callback) as F;
-  const [data, setData] = useState<F>();
-    console.log('Esta es la data: ' + JSON.stringify(data))
+  const [data, setData] = useState<F>(result);
+//   console.log(`Este es el resultado al comienzo: ${ JSON.stringify( result )}`)
+//   console.log(`Esta es la data: ${JSON.stringify( data )}`)
   useEffect(() => {
-    console.log('El resultado que entra: ' + JSON.stringify(result))
+    console.log(`Este es el resultado despues: ${ JSON.stringify( result )}`)
     setData(result);
   }, [result]);
 
