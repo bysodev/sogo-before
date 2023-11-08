@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 export default function LoginLayout ({
   children
 }: {
+  // eslint-disable-next-line no-undef
   children: React.ReactNode;
 }) {
   return <div>{children}</div>
